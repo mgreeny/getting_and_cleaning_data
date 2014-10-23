@@ -21,4 +21,20 @@ run_analysis <- function() {
   
   names(df) <- as.character(dffeatures[[2]])
   
+  #how to add labels from codes
+  df <- data.frame(id = c(1:6),
+                   profession = c(1, 5, 4, NA, 0, 5))
+  
+  pc <- data.frame(profession.code = c(1,2,3,4,5),
+                   profession.label = c('Optometrists',
+                                        'Accountants', 'Veterinarians', 
+                                        'Financial analysts',  'Nurses'))  
+  
+  
+  df$new <- as.character(pc[match(df$profession,  
+                                  pc$profession.code), 'profession.label'])
+  df[is.na(df$new), 'new'] <- df[is.na(df$new), 'profession'] 
+  df$new <- as.factor(df$new)
+  #end example
+  
 }
