@@ -13,13 +13,18 @@ run_analysis <- function() {
   #bind the data into a single data frame
   traindf <- cbind(traindfsubj,dfytrain,dfxtrain)
   
+  #append testdf to traindf
+  
   #load features names
   dffeatures <- read.table("./UCI HAR Dataset/features.txt")
   
   #load activity labels
   dfactlabels <- read.table("./UCI HAR Dataset/activity_labels.txt")
   
-  names(df) <- as.character(dffeatures[[2]])
+  #assign features names
+  #names(df) <- as.character(dffeatures[[2]])
+  
+  #subset means and stds
   
   #how to add labels from codes
   df <- data.frame(id = c(1:6),
