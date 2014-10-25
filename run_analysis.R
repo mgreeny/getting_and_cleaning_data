@@ -7,39 +7,33 @@ run_analysis <- function() {
   testdf <- cbind(testdfsubj,dfytest,dfxtest)
   
   #load the train data
-  dfxtrain <- read.table("./UCI HAR Dataset/test/X_test.txt")
-  dfytrain <- read.table("./UCI HAR Dataset/test/y_test.txt")
-  traindfsubj <- read.table("./UCI HAR Dataset/test/subject_test.txt")
+  dfxtrain <- read.table("./UCI HAR Dataset/train/X_train.txt")
+  dfytrain <- read.table("./UCI HAR Dataset/train/y_train.txt")
+  traindfsubj <- read.table("./UCI HAR Dataset/train/subject_train.txt")
   #bind the data into a single data frame
   traindf <- cbind(traindfsubj,dfytrain,dfxtrain)
   
   #append testdf to traindf
+  dfunion <- rbind(testdf,traindf)
   
   #load features names
   dffeatures <- read.table("./UCI HAR Dataset/features.txt")
   
+  #assign features names
+  names(dfunion) <- c("subject","activity",as.character(dffeatures[[2]]))
+    
+  #extract the mean and std columns
+  dfmean <- dfunion[ , grepl("mean()",names(dfunion))]
+  dfstd <-  dfunion[ , grepl("std()",names(dfunion))]
+  dffinal <- cbind(dfunion[,c(1:2)],dfmean,dfstd)
+  
   #load activity labels
   dfactlabels <- read.table("./UCI HAR Dataset/activity_labels.txt")
   
-  #assign features names
-  #names(df) <- as.character(dffeatures[[2]])
   
-  #subset means and stds
+  #replace the activity codes with the corresponding activity names
+  dffinal$activity <- as.character(dfactlabels[match(dffinal$activity,dfactlabels$V1),2])
+  #dffinal$activity <- as.factor(dffinal$activity)
   
-  #how to add labels from codes
-  df <- data.frame(id = c(1:6),
-                   profession = c(1, 5, 4, NA, 0, 5))
-  
-  pc <- data.frame(profession.code = c(1,2,3,4,5),
-                   profession.label = c('Optometrists',
-                                        'Accountants', 'Veterinarians', 
-                                        'Financial analysts',  'Nurses'))  
-  
-  
-  df$new <- as.character(pc[match(df$profession,  
-                                  pc$profession.code), 'profession.label'])
-  df[is.na(df$new), 'new'] <- df[is.na(df$new), 'profession'] 
-  df$new <- as.factor(df$new)
-  #end example
-  
+  return(dffinal)
 }
