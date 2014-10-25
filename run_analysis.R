@@ -33,7 +33,15 @@ run_analysis <- function() {
   
   #replace the activity codes with the corresponding activity names
   dffinal$activity <- as.character(dfactlabels[match(dffinal$activity,dfactlabels$V1),2])
-  #dffinal$activity <- as.factor(dffinal$activity)
+  dffinal$activity <- as.factor(dffinal$activity)
+  dffinal$subject <- as.factor(dffinal$subject)
   
-  return(dffinal)
+  #calculate aggregated average
+  aggdata <- aggregate(dffinal[,c(3:81)],FUN=mean,by=list(dffinal$activity,dffinal$subject))
+  
+  #remove factors and assign names to groups
+  colnames(prova)[1] <- "activity"
+  colnames(prova)[2] <- "subject"
+  
+  return(aggdata)
 }
