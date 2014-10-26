@@ -23,8 +23,8 @@ run_analysis <- function() {
   names(dfunion) <- c("subject","activity",as.character(dffeatures[[2]]))
     
   #extract the mean and std columns
-  dfmean <- dfunion[ , grepl("mean()",names(dfunion))]
-  dfstd <-  dfunion[ , grepl("std()",names(dfunion))]
+  dfmean <- dfunion[ , grepl("mean()",names(dfunion),fixed=TRUE)]
+  dfstd <-  dfunion[ , grepl("std()",names(dfunion),fixed=TRUE)]
   dffinal <- cbind(dfunion[,c(1:2)],dfmean,dfstd)
   
   #load activity labels
@@ -37,11 +37,11 @@ run_analysis <- function() {
   dffinal$subject <- as.factor(dffinal$subject)
   
   #calculate aggregated average
-  aggdata <- aggregate(dffinal[,c(3:81)],FUN=mean,by=list(dffinal$activity,dffinal$subject))
+  aggdata <- aggregate(dffinal[,c(3:68)],FUN=mean,by=list(dffinal$activity,dffinal$subject))
   
   #remove factors and assign names to groups
-  colnames(prova)[1] <- "activity"
-  colnames(prova)[2] <- "subject"
+  colnames(aggdata)[1] <- "activity"
+  colnames(aggdata)[2] <- "subject"
   
   return(aggdata)
 }
